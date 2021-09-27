@@ -34,9 +34,4 @@ app.set('views',path.join(__dirname,'resources/views'))
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
 })
-// hello world
-//long/27/9
-//33221
-//for you
-// hoa test
-// demoooo
+//boom
