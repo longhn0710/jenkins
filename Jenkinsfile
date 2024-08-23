@@ -16,6 +16,8 @@ pipeline {
 		repoAPI2branch = 'master'
 		gitCommit = "${env.GIT_COMMIT}"
 		jobName = "${env.JOB_NAME}"
+        repoName = jobName.tokenize('/')[1]
+
 		//githubCred
 		githubCred= 'lho28'
 		memberRecipients= 'longhn0710@gmail.com'
@@ -142,7 +144,7 @@ post {
 		<p>Regards,</p>
 		<p><b>DevOps Team</b></p>
 		<p><hr></p>
-		<p>Contact Point:  <a href="mailto:longngoc.ho@dxc.com">Long Ho</a></p>
+		<p>Contact Point:  <a href="mailto:longhn0710@gmail.com">Long Ho</a></p>
 		<p><em>Thank you for your kind cooperation.</em></p>
 		""",
 		mimeType: 'text/html',
