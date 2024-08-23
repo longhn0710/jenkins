@@ -7,11 +7,6 @@ pipeline {
     //     jdk "jdk17"
     // }
 
-    triggers {
-        githubPush()
-    //  pollSCM('TZ=Asia/Ho_Chi_Minh\nH(51-52) 8 * * *') // Poll SCM at 8:50 AM every day
-    }
-
     options {
     	buildDiscarder(logRotator(daysToKeepStr: '5', artifactNumToKeepStr: '10'))
 	    disableConcurrentBuilds()
