@@ -31,6 +31,7 @@ pipeline {
                     sh """
                     echo "ok"
                     aws --version
+                    echo "nanii"
                     """
                 }
             }
