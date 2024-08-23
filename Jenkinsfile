@@ -10,10 +10,6 @@ pipeline {
         buildDiscarder(logRotator(daysToKeepStr: '5', artifactNumToKeepStr: '10'))
         disableConcurrentBuilds()
     }
-    options {
-        buildDiscarder(logRotator(daysToKeepStr: '5', artifactNumToKeepStr: '10'))
-        disableConcurrentBuilds()
-    }
     //triggers {
     //    cron('TZ=Asia/Ho_Chi_Minh\nH(00-05) 9 18-29 3 1-5')
     //}
