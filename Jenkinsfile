@@ -16,11 +16,10 @@ pipeline {
 		repoAPI2branch = 'master'
 		gitCommit = "${env.GIT_COMMIT}"
 		jobName = "${env.JOB_NAME}"
-        repoName = jobName.tokenize('/')[1]
 
 		//githubCred
 		githubCred= 'lho28'
-		memberRecipients= 'longhn0710@gmail.com'
+		memberRecipients= ''
 		cluster_name = 'VNInsurance-cluster'
 		task_name = 'workbench-application'
 		ecs_subnet = 'subnet-088852fa830509beb'
@@ -60,6 +59,10 @@ pipeline {
 						env.userTrigger = 'Github Push Event'
 					}
 					echo "${changedCodeList}"
+                    def jobName = env.JOB_NAME
+					def parts = jobName.split('/')
+					env.REPO_NAME = parts.length > 1 ? parts[1] : jobName
+					echo "Repository name: ${env.REPO_NAME}"
 				}
 			}
 		}
@@ -100,8 +103,8 @@ pipeline {
 			steps {
 				script {
 					sh """	
-						echo "=== start fargate task ==="		
-						
+						echo "=== start fargate task ==="
+
 					"""
 				} // end script
 			} // end steps
@@ -109,53 +112,53 @@ pipeline {
     } // end stages
  
 post {
+		always {
+			script {
+				if (env.memberRecipients) {
+					emailext (
+						attachLog: true,
+						subject: "[ ${currentBuild.result} ] ${env.REPO_NAME} ${env.buildVersion}",
+						body: """
+						<head>
+						<meta http-equiv="Content-Type" content="text/html; charset=us-ascii"><style>
+						table {border-collapse: collapse;}
+						table, td, th {border: 1px solid black;}
+						</style>
+						</head>
+						<div><div><strong><span style="color: red;">*** This is an automatically generated email. Please do not reply ***</span></strong></div></div>
+						<p>Dear team,</p>
+						<p>Kindly be informed that the Jenkins job <b style="color:red">${env.REPO_NAME}</b> #<b>${env.buildVersion}</b> was <b style="color:red;text-transform:uppercase">${currentBuild.result}!</b>. Packages will be deployed after 5-20 minutes, please save data and close your session.</p>
 
-	always {
-
-		emailext (
-		attachLog: 'true',
-		subject: "[ ${currentBuild.result} ] ${JOB_NAME} ${buildVersion}",
-		body: """
-		<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=us-ascii"><style>
-		table {border-collapse: collapse;}
-		table, td, th {border: 1px solid black;}
-		</style>
-		</head>
-		<div><div><strong><span style="color: red;">*** This is an automatically generated email. Please do not reply ***</span></strong></div></div>
-		<p>Dear team,</p>
-		<p>Kindly be informed that the Jenkins job <b style="color:red">$JOB_NAME</b> #<b>$buildVersion</b> was <b style="color:red;text-transform:uppercase">${currentBuild.result}!</b>. Packages will be deployed after 5-20 minutes, please save data and close your session.</p>
-
-		<h2>Please review your change below:</h2>
-		<h4><strong>Environment Details:</strong></h4>
-		<ul>
-		<li><strong>Organization account: </strong><span style="color: blue;">VNInsurance</span></li>
-		<li><strong>Branch: </strong><span style="color: blue;">${repoAPI2branch}</span></li>
-		<li><strong>Version: </strong><span style="color: blue;">${buildVersion}</span></li>
-		<li><strong>Trigger By: </strong><span style="color: blue;">${userTrigger}</span></li>
-		<li><strong>Changed Code Details:</strong></li>
-		<table style="border-color: black;" border="1" width="100%">
-		<tbody>
-		<tr><td><strong>Author</strong></td><td><strong>Commit</strong></td><td><strong>Changed Files</strong></td><td><strong>Time</strong></td></tr>
-		${changedCodeList}
-		</tbody>
-		</table>
-		</ul>
-		<p>Regards,</p>
-		<p><b>DevOps Team</b></p>
-		<p><hr></p>
-		<p>Contact Point:  <a href="mailto:longhn0710@gmail.com">Long Ho</a></p>
-		<p><em>Thank you for your kind cooperation.</em></p>
-		""",
-		mimeType: 'text/html',
-		to: memberRecipients,
-		recipientProviders: [[$class: 'CulpritsRecipientProvider']]
-		)
-		echo 'One way or another, I have finished'	
-		deleteDir() /* clean up our workspace */
-
-	}
-
+						<h2>Please review your change below:</h2>
+						<h4><strong>Environment Details:</strong></h4>
+						<ul>
+						<li><strong>Organization account: </strong><span style="color: blue;">VNInsurance</span></li>
+						<li><strong>Branch: </strong><span style="color: blue;">${env.repoAPI2branch}</span></li>
+						<li><strong>Version: </strong><span style="color: blue;">${env.buildVersion}</span></li>
+						<li><strong>Trigger By: </strong><span style="color: blue;">${env.userTrigger}</span></li>
+						<li><strong>Changed Code Details:</strong></li>
+						<table style="border-color: black;" border="1" width="100%">
+						<tbody>
+						<tr><td><strong>Author</strong></td><td><strong>Commit</strong></td><td><strong>Changed Files</strong></td><td><strong>Time</strong></td></tr>
+						${env.changedCodeList}
+						</tbody>
+						</table>
+						</ul>
+						<p>Regards,</p>
+						<p><b>DevOps Team</b></p>
+						<p><hr></p>
+						<p>Contact Point:  <a href="mailto:longhn0710@gmail.com">Long Ho</a></p>
+						<p><em>Thank you for your kind cooperation.</em></p>
+						""",
+						mimeType: 'text/html',
+						to: env.memberRecipients,
+						recipientProviders: [[$class: 'CulpritsRecipientProvider']]
+					)
+					echo 'One way or another, I have finished'	
+					deleteDir() /* clean up our workspace */
+				}
+            }
+    }
 }  
 
 }
