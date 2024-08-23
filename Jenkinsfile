@@ -19,7 +19,7 @@ pipeline {
 
 		//githubCred
 		githubCred= 'lho28'
-		memberRecipients= ''
+		memberRecipients= 'longhn0710@gmail.com'
 		cluster_name = 'VNInsurance-cluster'
 		task_name = 'workbench-application'
 		ecs_subnet = 'subnet-088852fa830509beb'
