@@ -1,11 +1,6 @@
 pipeline {
     agent any
 
-	// tools {
-    //     maven "mvn"
-    //     jdk "jdk17"
-    // }
-
     options {
     	buildDiscarder(logRotator(daysToKeepStr: '5', artifactNumToKeepStr: '10'))
 	    disableConcurrentBuilds()
@@ -15,18 +10,7 @@ pipeline {
 		repoAPI2branch = 'master'
 		gitCommit = "${env.GIT_COMMIT}"
 		jobName = "${env.JOB_NAME}"
-
-		//githubCred
-		githubCred= 'lho28'
 		memberRecipients= 'longhn0710@gmail.com'
-		cluster_name = 'VNInsurance-cluster'
-		task_name = 'workbench-application'
-		ecs_subnet = 'subnet-088852fa830509beb'
-		ecs_sg = 'sg-0bcbaa3c939572bf4'
-		reponsitory = '441176660097.dkr.ecr.ap-southeast-1.amazonaws.com'
-		bucketName = 'workbenchs3dev'
-		distFolder = 'workbench-app'
-
     } // define required environment variables
 
  stages {   
@@ -66,37 +50,6 @@ pipeline {
 			}
 		}
 
-		// stage('Stage 3 Prepare Package') { 
-		// // this stage will build JAR package
-		// 	steps {
-		// 		script {
-		// 			sh """
-		// 				mv -f $WORKSPACE/src/environments/aws-exports.js.deploy $WORKSPACE/src/aws-exports.js
-		// 				cat $WORKSPACE/src/aws-exports.js
-		// 				echo "$buildVersion:$gitCommit" > $WORKSPACE/src/assets/version.html
-		// 			"""
-		// 		} // end script
-		// 	} // end steps
-		// } // end stage 3
-
-		// stage('Stage 3 Build Images') { 
-		// // this stage will build JAR package
-		// 	steps {
-		// 		script {
-		// 			sh """
-		// 				aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin ${reponsitory}
-		// 				docker rmi ${task_name} || true
-		// 				docker build -t ${task_name} .
-		// 				docker tag ${task_name} ${reponsitory}/${task_name}:${buildVersion}
-		// 				docker tag ${task_name} ${reponsitory}/${task_name}:latest
-		// 				docker push ${reponsitory}/${task_name}:${buildVersion}
-		// 				docker push ${reponsitory}/${task_name}:latest
-		// 				docker rmi ${reponsitory}/${task_name}:${buildVersion}
-		// 				docker rmi ${reponsitory}/${task_name}:latest
-		// 			"""
-		// 		} // end script
-		// 	} // end steps
-		// } // end stage 3
 		stage('Stage 4 Trigger ECS Task Build') { 
 		// this stage will upload JAR packages to PDXC 
 			steps {
