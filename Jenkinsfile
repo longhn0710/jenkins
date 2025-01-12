@@ -81,19 +81,10 @@ pipeline {
 			                    echo "Authorsh: ${author} <${email}>"
 			                    echo "Messagesh: ${commitMessage}"
 			                    echo "Timesh: ${commitTime}"
-								def changeLogSets = currentBuild.changeSets
-								for (changeLog in changeLogSets) {
-								for (entry in changeLog.items) {
-								def authoe = entry.author.email
-								def username = authoe.contains('noreply') ? 
-								authoe.split('@')[0].split('+')[1] : 
-								authoe.split('@')[0]
-								echo "GitHub Username: ${username}"
-								// Ánh xạ username sang userid nếu cần
-								}
-								}
-								}
+							}
+							
 			}
+			
 		}
 
 
