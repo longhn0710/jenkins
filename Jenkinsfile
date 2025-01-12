@@ -1,11 +1,6 @@
 pipeline {
     agent any
 
-	// tools {
-    //     maven "mvn"
-    //     jdk "jdk17"
-    // }
-
     options {
     	buildDiscarder(logRotator(daysToKeepStr: '5', artifactNumToKeepStr: '10'))
 	    disableConcurrentBuilds()
@@ -14,23 +9,13 @@ pipeline {
     environment {
 		gitCommit = "${env.GIT_COMMIT}"
 		jobName = "${env.JOB_NAME}"
-
-		//githubCred
-		githubCred= 'lho28'
 		memberRecipients= 'longhn0710@gmail.com'
-		cluster_name = 'VNInsurance-cluster'
-		task_name = 'workbench-application'
-		ecs_subnet = 'subnet-088852fa830509beb'
-		ecs_sg = 'sg-0bcbaa3c939572bf4'
-		reponsitory = '441176660097.dkr.ecr.ap-southeast-1.amazonaws.com'
-		bucketName = 'workbenchs3dev'
-		distFolder = 'workbench-app'
 
-    } // define required environment variables
+
+    } 
 
  stages {   
 		stage('Stage 1 Getting build number') { 
-		// this stage will get build number
 			steps {
 				script {		
 					def now = new Date()
@@ -47,7 +32,7 @@ pipeline {
 					if (currentBuild.number != '1') {
 						for (changeLog in currentBuild.changeSets) {
 							for(entry in changeLog.items) {                
-								changes += "<tr><td><span style='color: blue;'>${entry.author}</span></td> <td><span style='color: blue;'>${entry.msg}</span></td><td><span style='color: blue;'>${entry.affectedPaths}</span></td><td><span style='color: blue;'>${new Date(entry.timestamp)}</span></td></tr>"
+								changes += "<tr><td><span style='color: blue;'>${entry.author.fullName}</span></td> <td><span style='color: blue;'>${entry.msg}</span></td><td><span style='color: blue;'>${entry.affectedPaths}</span></td><td><span style='color: blue;'>${new Date(entry.timestamp)}</span></td></tr>"
 							}
 						}
 					}
