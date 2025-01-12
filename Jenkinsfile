@@ -93,9 +93,9 @@ pipeline {
 								}
 								}
 								}
-			                }
-			            }
-		} // end stage 3
+			}
+		}
+
 
 		// stage('Stage 3 Build Images') { 
 		// // this stage will build JAR package
