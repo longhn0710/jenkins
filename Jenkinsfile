@@ -85,7 +85,7 @@ post {
 						<h4><strong>Environment Details:</strong></h4>
 						<ul>
 						<li><strong>Organization account: </strong><span style="color: blue;">VNInsurance</span></li>
-						<li><strong>Branch: </strong><span style="color: blue;">${env.repoAPI2branch}</span></li>
+						<li><strong>Branch: </strong><span style="color: blue;">${env.BRANCH_NAME}</span></li>
 						<li><strong>Version: </strong><span style="color: blue;">${env.buildVersion}</span></li>
 						<li><strong>Trigger By: </strong><span style="color: blue;">${env.userTrigger}</span></li>
 						<li><strong>Changed Code Details:</strong></li>
