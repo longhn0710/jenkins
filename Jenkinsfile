@@ -12,7 +12,6 @@ pipeline {
 	}
 
     environment {
-		repoAPI2branch = 'master'
 		gitCommit = "${env.GIT_COMMIT}"
 		jobName = "${env.JOB_NAME}"
 
@@ -66,18 +65,40 @@ pipeline {
 			}
 		}
 
-		// stage('Stage 3 Prepare Package') { 
-		// // this stage will build JAR package
-		// 	steps {
-		// 		script {
-		// 			sh """
-		// 				mv -f $WORKSPACE/src/environments/aws-exports.js.deploy $WORKSPACE/src/aws-exports.js
-		// 				cat $WORKSPACE/src/aws-exports.js
-		// 				echo "$buildVersion:$gitCommit" > $WORKSPACE/src/assets/version.html
-		// 			"""
-		// 		} // end script
-		// 	} // end steps
-		// } // end stage 3
+		stage('Stage 3 Prepare Package') { 
+		// this stage will build JAR package
+			steps {
+			                script {
+			                    // Lấy tên tác giả
+			                    def author = sh(
+			                        script: "git log -1 --pretty=format:'%an'",
+			                        returnStdout: true
+			                    ).trim()
+			
+			                    // Lấy email tác giả
+			                    def email = sh(
+			                        script: "git log -1 --pretty=format:'%ae'",
+			                        returnStdout: true
+			                    ).trim()
+			
+			                    // Lấy tin nhắn commit
+			                    def commitMessage = sh(
+			                        script: "git log -1 --pretty=format:'%s'",
+			                        returnStdout: true
+			                    ).trim()
+			
+			                    // Lấy thời gian commit
+			                    def commitTime = sh(
+			                        script: "git log -1 --pretty=format:'%cd'",
+			                        returnStdout: true
+			                    ).trim()
+			
+			                    echo "Author: ${author} <${email}>"
+			                    echo "Message: ${commitMessage}"
+			                    echo "Time: ${commitTime}"
+			                }
+			            }
+		} // end stage 3
 
 		// stage('Stage 3 Build Images') { 
 		// // this stage will build JAR package
@@ -132,7 +153,7 @@ post {
 						<h4><strong>Environment Details:</strong></h4>
 						<ul>
 						<li><strong>Organization account: </strong><span style="color: blue;">VNInsurance</span></li>
-						<li><strong>Branch: </strong><span style="color: blue;">${env.repoAPI2branch}</span></li>
+						<li><strong>Branch: </strong><span style="color: blue;">${env.BRANCH_NAME}</span></li>
 						<li><strong>Version: </strong><span style="color: blue;">${env.buildVersion}</span></li>
 						<li><strong>Trigger By: </strong><span style="color: blue;">${env.userTrigger}</span></li>
 						<li><strong>Changed Code Details:</strong></li>
