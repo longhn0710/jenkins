@@ -25,7 +25,6 @@ jobs:
 
           RESPONSE=$(aws lambda invoke \
             --function-name $FUNCTION_NAME \
-            --payload "$PAYLOAD" \
             response.json \
             --query 'StatusCode' --output text)
 
