@@ -20,18 +20,10 @@ jobs:
 
       - name: Invoke AWS Lambda Function
         run: |
-          FUNCTION_NAME="Stop_Ec2"  # Thay thế bằng tên Lambda của bạn
-          PAYLOAD='{"key1": "value1", "key2": "value2"}'  # Dữ liệu đầu vào cho Lambda
+          FUNCTION_NAME="Stop_Ec2"  
+          PAYLOAD='{"key1": "value1", "key2": "value2"}'  
 
           RESPONSE=$(aws lambda invoke \
             --function-name $FUNCTION_NAME \
             response.json \
             --query 'StatusCode' --output text)
-
-          if [ "$RESPONSE" -eq 200 ]; then
-            echo "Lambda function triggered successfully."
-            cat response.json
-          else
-            echo "Failed to trigger Lambda function."
-            exit 1
-          fi
