@@ -22,7 +22,7 @@ jobs:
       - name: Start EC2 instance with tag "remote:true"
         run: |
           INSTANCE_ID=$(aws ec2 describe-instances \
-            --filters "Name=tag:remote,Values=true" "Name=instance-state-name,Values=stopped" \
+            --filters "Name=tag:start,Values=true" "Name=instance-state-name,Values=stopped" \
             --query "Reservations[*].Instances[*].InstanceId" --output text)
 
           if [ -n "$INSTANCE_ID" ]; then
