@@ -3,7 +3,9 @@
 name: Start EC2 Instance with Tag start:true
 
 on:
-  workflow_dispatch:  # Cho phép chạy thủ công từ GitHub Actions
+  workflow_dispatch:
+  schedule:
+  - cron: '55 1 * * 1-5'
 
 jobs:
   start-ec2:
