@@ -9,7 +9,7 @@ pipeline {
     environment {
 		gitCommit = "${env.GIT_COMMIT}"
 		jobName = "${env.JOB_NAME}"
-		memberRecipients= 'longhn0710@gmail.com'
+		memberRecipients= 'longhn0710@gmail.com, 10b3.11a2@gmail.com'
 
 
     } 
