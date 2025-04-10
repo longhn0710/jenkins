@@ -2,36 +2,34 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout Git') {
-            steps {
-                // Checkout source code từ Git
-                checkout scm
-            }
-        }
-        
         stage('Generate Changelog') {
             steps {
                 script {
-                    // Lấy changelog giữa các commit sử dụng Git Changelog Plugin
-                    def changelog = gitChangelog(
-                        sinceCommit: "HEAD~5", // Xem changelog từ commit 5 lần build trước
-                        untilCommit: "HEAD",   // Đến commit hiện tại
-                        commitRange: true      // Chỉ lấy changelog trong phạm vi commit range
+                    // Lấy changelog dạng string từ Git Changelog Plugin
+                    def changelogString = gitChangelog(
+                        returnType: 'STRING',
+                        from: [type: 'REF', value: 'git-changelog-1.50'],
+                        to: [type: 'REF', value: 'master'],
+                        template: """
+                        Changelog Template:
+                        - From: ${from}
+                        - To: ${to}
+                        """
                     )
 
-                    // In changelog ra Jenkins console
-                    echo "Changelog:\n${changelog}"
-
-                    // Ghi changelog vào tệp CHANGELOG.md
-                    writeFile(file: 'CHANGELOG.md', text: changelog)
+                    // Đặt mô tả cho build để hiển thị changelog
+                    currentBuild.description = changelogString
                 }
             }
         }
 
         stage('Publish Changelog') {
             steps {
-                // Publish changelog hoặc làm gì đó với nó, ví dụ: gửi email, lưu trữ, v.v.
-                echo "Changelog has been saved to CHANGELOG.md."
+                script {
+                    // Nếu cần, bạn có thể lưu changelog vào tệp CHANGELOG.md hoặc thực hiện công việc khác với changelog
+                    writeFile(file: 'CHANGELOG.md', text: currentBuild.description)
+                    echo "Changelog has been saved to CHANGELOG.md"
+                }
             }
         }
     }
