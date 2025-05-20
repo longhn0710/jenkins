@@ -1,37 +1,9 @@
-+-----------------------+
-|   Developer Push Code |
-+----------+------------+
-           |
-           v
-+-----------------------+
-|   GitLab Trigger CI   |
-+----------+------------+
-           |
-           v
-+-----------------------------+
-|     Jenkins CI Pipeline     |
-| - Build                     |
-| - Unit Test                 |
-| - Static Code Analysis      |
-+----------+------------------+
-           |
-           | (Fail => Stop)
-           v
-+-----------------------------+
-|  Deploy to UAT Environment  |
-+----------+------------------+
-           |
-           v
-+-----------------------------+
-| Run Selenium Automation Test|
-+----------+------------------+
-           | Pass      | Fail
-           v           v
-+----------------+   +----------------------+
-| Mark MR ✅ Pass|   | Trigger Rollback Job |
-+----------------+   +----------+-----------+
-                                  |
-                                  v
-                    +---------------------------+
-                    | Rollback to Last Stable   |
-                    +---------------------------+
+graph TD
+    A[Developer Push Code] --> B[GitLab triggers Jenkins]
+    B --> C[Build + Unit Test + Static Analysis]
+    C -->|Fail| Z[Stop Pipeline]
+    C -->|Pass| D[Deploy to UAT]
+    D --> E[Run Selenium Automation Test]
+    E -->|Pass| F[Mark MR as Passed ✅]
+    E -->|Fail| G[Trigger Rollback]
+    G --> H[Rollback to Previous Stable Release]
